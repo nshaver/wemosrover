@@ -91,7 +91,7 @@ void showtext(int x, int y, int size, String text, boolean clearDisplay){
   display.setTextColor(WHITE);
   display.setCursor(x, y);
   display.setTextSize(size);
-	display.println(text);
+  display.println(text);
   display.display();
 }
 
@@ -149,27 +149,13 @@ void fDrive(int s1, int s2, int s3, int s4 ){
  * create and transmit the control GUI
  */
 void handleRoot() {
-	server.send(200, "text/html", "<head></head><body style=\"font-size:24px;\"><a href=\"/v1\">Video on IP 1</a><br><head></head><body><a href=\"/v2\">Video on IP 2</a></body></html>");
+	server.send(200, "text/html", "<head></head><body style=\"font-size:24px;\"><a href=\"/gui\">GUI</a></body></html>");
 }
 
-void handleV1() {
-	webcamip=2;
+void handleGUI() {
 	conncnt++;
 	beep(150, 750, 1);
-	server.send(200, "text/html", html1+(String)webcamip+html2);
-
-	// black out the area that we're about to write to
-	display.fillRect(0, 30, 128, 10, BLACK);
-
-	text="conn:"+(String)conncnt;
-	showtext(0, 30, 1, text, false);
-}
-
-void handleV2() {
-	webcamip=3;
-	conncnt++;
-	beep(150, 750, 1);
-	server.send(200, "text/html", html1+(String)webcamip+html2);
+	server.send(200, "text/html", html);
 
 	// black out the area that we're about to write to
 	display.fillRect(0, 30, 128, 10, BLACK);
@@ -362,8 +348,7 @@ void startWifi(){
 	httpUpdater.setup(&server);
 
 	server.on("/", handleRoot);
-	server.on("/v1", handleV1);
-	server.on("/v2", handleV2);
+	server.on("/gui", handleGUI);
 	server.on("/drive", handleDrive);
 	server.onNotFound(handleNotFound);
 	
@@ -402,8 +387,8 @@ void setup(){
 	//////////////////////////////////////////////
 	// oled
 	//////////////////////////////////////////////
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3D (for the 128x64)
-  display.display();
+	display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3D (for the 128x64)
+	display.display();
 
 	//////////////////////////////////////////////
 	// drive motors
